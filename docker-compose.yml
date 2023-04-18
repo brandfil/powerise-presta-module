@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  powerise_prestashop:
+    container_name: powerise_prestashop
+    image: prestashop/prestashop:1.7.8-7.1
+    ports:
+      - "80:80"
+    environment:
+      DB_SERVER: powerise_mysql
+      PS_DEV_MODE: 1
+      PS_INSTALL_AUTO: 1
+      PS_DOMAIN: prestashop.local
+      PS_INSTALL_DB: 1
+      PS_ERASE_DB: 1
+      PS_FOLDER_ADMIN: admin-dev
+      PS_LANGUAGE: pl
+      PS_COUNTRY: PL
+    volumes:
+      - ./:/var/www/html/modules/powerise
+    depends_on:
+      - powerise_mysql
+    networks:
+      powerise_prestashop:
+        aliases:
+          - prestashop.local
+
+  powerise_mysql:
+    container_name: powerise_mysql
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      powerise_prestashop:
+
+networks:
+  powerise_prestashop:
+
+volumes:
+  db_data:
