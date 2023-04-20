@@ -1,0 +1,29 @@
+{
+  "name": "powerise/prestashop",
+  "description": "Powerise with PrestaShop integration module",
+  "type": "prestashop-module",
+  "authors": [
+    {
+      "name": "Sebastian Lewandowski",
+      "email": "sebastian.lewandowski@nestcode.pl"
+    },
+    {
+      "name": "Piotr Miłoszewicz",
+      "email": "piotr.miloszewicz@brandfil.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Powerise\\PrestaShop\\": "src/"
+    },
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false,
+    "discard-changes": true
+  }
+}
