@@ -3,7 +3,9 @@ version: '3'
 services:
   powerise_prestashop:
     container_name: powerise_prestashop
-    image: prestashop/prestashop:1.7.8-7.2
+    build:
+      dockerfile: Dockerfile
+      context: .
     ports:
       - "80:80"
     environment:
@@ -27,7 +29,7 @@ services:
 
   powerise_mysql:
     container_name: powerise_mysql
-    image: mysql:5.7
+    image: mariadb:latest
     ports:
       - "3308:3306"
     environment:
