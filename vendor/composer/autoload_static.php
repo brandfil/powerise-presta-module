@@ -22,7 +22,6 @@ class ComposerStaticInit042830f4aeeb560d6e58b7e196f7506c
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Powerise\\PrestaShop\\Mapper\\ProductMapper' => __DIR__ . '/../..' . '/src/Mapper/ProductMapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

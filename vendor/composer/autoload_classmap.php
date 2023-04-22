@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Powerise\\PrestaShop\\Mapper\\ProductMapper' => $baseDir . '/src/Mapper/ProductMapper.php',
 );

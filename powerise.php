@@ -83,23 +83,36 @@ class Powerise extends Module
             $this->postProcess();
         }
 
+        $redirectUrl = $this->context->link->getModuleLink('powerise', 'gateway', [
+            'q' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
+        ]);
+
+        $baseUrl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+        $baseUrl .= "://".$_SERVER['HTTP_HOST'];
+        $baseUrl .= str_replace(basename($_SERVER['SCRIPT_NAME']),"", $_SERVER['SCRIPT_NAME']);
+
         $this->context->smarty->assign('module_dir', $this->_path);
         $this->context->smarty->assign('connect_url', sprintf(
             '%s/connect?payload=%s',
             'http://localhost:3000',
             base64_encode(json_encode([
-                'redirect_url' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
-                'shop_url' => '',
+                'redirect_url' => $redirectUrl,
+                'shop_url' => $baseUrl,
                 'engine' => 'PrestaShop',
             ]))
         ));
 
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
-        if ($disabled = true) {
-            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            var_dump($_POST);
         }
 
+//        if ($disabled = true) {
+//            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
+//        }
+
+        return $output;
         return $output . $this->renderForm();
     }
 
