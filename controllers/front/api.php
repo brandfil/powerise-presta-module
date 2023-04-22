@@ -10,6 +10,12 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
+        $apiKey = Tools::getValue('apiKey');
+        if (empty($apiKey) || $apiKey !== Configuration::get('POWERISE_API_KEY')) {
+            http_response_code(401);
+            return die(json_encode(['error' => 'Invalid API key.']));
+        }
+
         $page = Tools::getValue('page');
         $action = Tools::getValue('action');
 

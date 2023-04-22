@@ -105,14 +105,16 @@ class Powerise extends Module
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            var_dump($_POST);
+            if (!empty($_POST['userId']) && !empty($_POST['apiKey'])) {
+                \Configuration::updateValue('POWERISE_USER_ID', $_POST['userId']);
+                \Configuration::updateValue('POWERISE_API_KEY', $_POST['apiKey']);
+            }
         }
 
-//        if ($disabled = true) {
-//            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
-//        }
+        if ($disabled = empty(\Configuration::get('POWERISE_API_KEY'))) {
+            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
+        }
 
-        return $output;
         return $output . $this->renderForm();
     }
 
