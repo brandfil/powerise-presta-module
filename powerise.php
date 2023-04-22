@@ -59,19 +59,13 @@ class Powerise extends Module
      */
     public function install()
     {
-        Configuration::updateValue('POWERISE_LIVE_MODE', false);
-
         include(__DIR__ .'/sql/install.php');
 
-        return parent::install() &&
-            $this->registerHook('header') &&
-            $this->registerHook('displayBackOfficeHeader');
+        return parent::install() && $this->registerHook('displayBackOfficeHeader');
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('POWERISE_LIVE_MODE');
-
         include(__DIR__ .'/sql/uninstall.php');
 
         return parent::uninstall();
@@ -90,10 +84,23 @@ class Powerise extends Module
         }
 
         $this->context->smarty->assign('module_dir', $this->_path);
+        $this->context->smarty->assign('connect_url', sprintf(
+            '%s/connect?payload=%s',
+            'http://localhost:3000',
+            base64_encode(json_encode([
+                'redirect_url' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
+                'shop_url' => '',
+                'engine' => 'PrestaShop',
+            ]))
+        ));
 
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
-        return $output.$this->renderForm();
+        if ($disabled = true) {
+            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
+        }
+
+        return $output . $this->renderForm();
     }
 
     /**
@@ -137,36 +144,12 @@ class Powerise extends Module
                 ),
                 'input' => array(
                     array(
-                        'type' => 'switch',
-                        'label' => $this->l('Live mode'),
-                        'name' => 'POWERISE_LIVE_MODE',
-                        'is_bool' => true,
-                        'desc' => $this->l('Use this module in live mode'),
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled')
-                            )
-                        ),
-                    ),
-                    array(
                         'col' => 3,
+                        'prefix' => '<i class="icon-key"></i>',
                         'type' => 'text',
-                        'prefix' => '<i class="icon icon-envelope"></i>',
-                        'desc' => $this->l('Enter a valid email address'),
-                        'name' => 'POWERISE_ACCOUNT_EMAIL',
-                        'label' => $this->l('Email'),
-                    ),
-                    array(
-                        'type' => 'password',
-                        'name' => 'POWERISE_ACCOUNT_PASSWORD',
-                        'label' => $this->l('Password'),
+                        'name' => 'POWERISE_API_KEY',
+                        'label' => $this->l('API Key'),
+                        'desc' => $this->l('API Key will be fetched automatically when you will connect your shop with Powerise.'),
                     ),
                 ),
                 'submit' => array(
@@ -182,9 +165,7 @@ class Powerise extends Module
     protected function getConfigFormValues()
     {
         return array(
-            'POWERISE_LIVE_MODE' => Configuration::get('POWERISE_LIVE_MODE', true),
-            'POWERISE_ACCOUNT_EMAIL' => Configuration::get('POWERISE_ACCOUNT_EMAIL', 'contact@prestashop.com'),
-            'POWERISE_ACCOUNT_PASSWORD' => Configuration::get('POWERISE_ACCOUNT_PASSWORD', null),
+            'POWERISE_API_KEY' => Configuration::get('POWERISE_API_KEY'),
         );
     }
 
@@ -209,14 +190,5 @@ class Powerise extends Module
             $this->context->controller->addJS($this->_path.'views/js/back.js');
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }
-    }
-
-    /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-     */
-    public function hookHeader()
-    {
-        $this->context->controller->addJS($this->_path.'/views/js/front.js');
-        $this->context->controller->addCSS($this->_path.'/views/css/front.css');
     }
 }

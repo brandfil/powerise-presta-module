@@ -24,25 +24,13 @@
 *}
 
 <div class="panel">
-	<h3><i class="icon icon-credit-card"></i> {l s='Powerise' mod='powerise'}</h3>
-	<p>
-		<strong>{l s='Here is my new generic module!' mod='powerise'}</strong><br />
-		{l s='Thanks to PrestaShop, now I have a great module.' mod='powerise'}<br />
-		{l s='I can configure it using the following configuration form.' mod='powerise'}
-	</p>
-	<br />
-	<p>
-		{l s='This module will boost your sales!' mod='powerise'}
-	</p>
-</div>
-
-<div class="panel">
-	<h3><i class="icon icon-tags"></i> {l s='Documentation' mod='powerise'}</h3>
-	<p>
-		&raquo; {l s='You can get a PDF documentation to configure this module' mod='powerise'} :
-		<ul>
-			<li><a href="#" target="_blank">{l s='English' mod='powerise'}</a></li>
-			<li><a href="#" target="_blank">{l s='French' mod='powerise'}</a></li>
-		</ul>
-	</p>
+	<h3><i class="icon icon-link"></i> {l s='Connect' mod='powerise'}</h3>
+	<div class="row">
+		<div class="col-md-6">
+			<h4>{l s='Connect your shop with Powerise account and start using the power of AI' mod='powerise'}</h4>
+		</div>
+		<div class="col-md-6 text-right">
+			<a href="{$connect_url}" class="btn btn-primary">{l s='Connect' mod='powerise'}</a>
+		</div>
+	</div>
 </div>

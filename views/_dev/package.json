@@ -1,0 +1,29 @@
+{
+  "name": "powerise",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "src/js/back.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress",
+    "watch": "webpack --progress --watch"
+  },
+  "author": "PrestaShop",
+  "license": "AFL-3.0",
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.5",
+    "firebase": "^9.20.0",
+    "jquery": "~3.5.1"
+  },
+  "devDependencies": {
+    "css-loader": "^6.7.3",
+    "csso-webpack-plugin": "^2.0.0-beta.3",
+    "esbuild-loader": "^2.21.0",
+    "mini-css-extract-plugin": "^2.7.2",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.58.0",
+    "sass-loader": "^13.2.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
+}
