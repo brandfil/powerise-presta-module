@@ -14,6 +14,7 @@ class ProductMapper
         $link = new \Link();
         $image = \Image::getCover($product['id_product']);
         return [
+            'id' => $product['id_product'],
             'name' => $product['name'],
             'sku' => $product['reference'],
             'image' => $link->getImageLink($product['link_rewrite'], $image['id_image'], 'home_default'),
