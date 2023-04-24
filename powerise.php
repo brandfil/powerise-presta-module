@@ -86,7 +86,7 @@ class Powerise extends Module
         $redirectUrl = $this->context->link->getModuleLink('powerise', 'gateway', [
             'q' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
         ]);
-        $baseUrl = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . Tools::getShopDomain(true);
+        $baseUrl = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . Tools::getShopDomain(false);
 
         $this->context->smarty->assign('module_dir', $this->_path);
         $this->context->smarty->assign('connect_url', sprintf(
