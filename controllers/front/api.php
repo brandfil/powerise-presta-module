@@ -30,8 +30,8 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
                 $product = new \Product(Tools::getValue('id'));
                 $product->description = Tools::getValue('description');
                 $product->save();
-                http_response_code(204);
-                return die();
+                http_response_code(200);
+                return die(json_encode([]));
             default:
                 http_response_code(400);
                 return die(json_encode(['error' => 'Invalid action.']));
