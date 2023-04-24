@@ -33,7 +33,7 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
                 $product->description = $data['description'];
                 $product->save();
                 http_response_code(200);
-                return die(json_encode([]));
+                return die(json_encode($product)); // TODO: MAP PRODUCT
             default:
                 http_response_code(400);
                 return die(json_encode(['error' => 'Invalid action.']));
