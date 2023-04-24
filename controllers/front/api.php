@@ -8,9 +8,11 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
 
     const ACTION_PRODUCTS = 'products';
 
+    const ACTION_PRODUCT_UPDATE = 'product-update';
+
     public function postProcess()
     {
-        $apiKey = Tools::getValue('apiKey');
+        $apiKey = $_SERVER['HTTP_X_API_KEY'];
         if (empty($apiKey) || $apiKey !== Configuration::get('POWERISE_API_KEY')) {
             http_response_code(401);
             return die(json_encode(['error' => 'Invalid API key.']));
@@ -19,10 +21,17 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
         $page = Tools::getValue('page');
         $action = Tools::getValue('action');
 
-        header('Content-type: application/json');
+        header('Content-Type: application/json');
         switch($action) {
             case self::ACTION_PRODUCTS:
+                http_response_code(200);
                 return die(json_encode($this->getProducts($page)));
+            case self::ACTION_PRODUCT_UPDATE:
+                $product = new \Product(Tools::getValue('id'));
+                $product->description = Tools::getValue('description');
+                $product->save();
+                http_response_code(204);
+                return die();
             default:
                 http_response_code(400);
                 return die(json_encode(['error' => 'Invalid action.']));
