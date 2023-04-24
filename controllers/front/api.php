@@ -31,7 +31,7 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
 
     private function getProducts($page = 1)
     {
-        $productMapper = new ProductMapper();
+        $productMapper = new ProductMapper($this->context);
         $products = \Product::getProducts(
             $this->context->language->id,
             ($page - 1) * self::PRODUCTS_BATCH_SIZE,
