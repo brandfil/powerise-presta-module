@@ -19,6 +19,7 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
         $page = Tools::getValue('page');
         $action = Tools::getValue('action');
 
+        header('Content-type: application/json');
         switch($action) {
             case self::ACTION_PRODUCTS:
                 return die(json_encode($this->getProducts($page)));
