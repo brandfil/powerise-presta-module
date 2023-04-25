@@ -88,6 +88,23 @@ class Powerise extends Module
         ]);
         $baseUrl = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . Tools::getShopDomain(false);
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!empty($_POST['userId']) && !empty($_POST['apiKey'])) {
+                \Configuration::updateValue('POWERISE_USER_ID', $_POST['userId']);
+                \Configuration::updateValue('POWERISE_API_KEY', $_POST['apiKey']);
+                if(!empty($_POST['firstName'])) {
+                    \Configuration::updateValue('POWERISE_AUTH_FIRSTNAME', $_POST['firstName']);
+                }
+                if(!empty($_POST['lastName'])) {
+                    \Configuration::updateValue('POWERISE_AUTH_LASTNAME', $_POST['lastName']);
+                }
+                \Configuration::updateValue('POWERISE_AUTH_EMAIL', $_POST['email']);
+            }
+        }
+
+        $this->context->smarty->assign('auth_user_email', \Configuration::get('POWERISE_AUTH_EMAIL'));
+        $this->context->smarty->assign('auth_user_firstname', \Configuration::get('POWERISE_AUTH_FIRSTNAME'));
+        $this->context->smarty->assign('auth_user_lastname', \Configuration::get('POWERISE_AUTH_LASTNAME'));
         $this->context->smarty->assign('module_dir', $this->_path);
         $this->context->smarty->assign('connect_url', sprintf(
             '%s/connect?payload=%s',
@@ -100,13 +117,6 @@ class Powerise extends Module
         ));
 
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!empty($_POST['userId']) && !empty($_POST['apiKey'])) {
-                \Configuration::updateValue('POWERISE_USER_ID', $_POST['userId']);
-                \Configuration::updateValue('POWERISE_API_KEY', $_POST['apiKey']);
-            }
-        }
 
         if ($disabled = empty(\Configuration::get('POWERISE_API_KEY'))) {
             return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';

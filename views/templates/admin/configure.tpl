@@ -30,7 +30,12 @@
 			<h4>{l s='Connect your shop with Powerise account and start using the power of AI' mod='powerise'}</h4>
 		</div>
 		<div class="col-md-6 text-right">
-			<a href="{$connect_url}" class="btn btn-primary">{l s='Connect' mod='powerise'}</a>
+			{if $auth_user_email}
+				<p><strong>{l s='You are connected as' mod='powerise'}</strong> {$auth_user_firstname} {$auth_user_lastname} ({$auth_user_email})</p>
+				<p><a href="{$connect_url}">{l s='Do you want to change account?' mod='powerise'}</a></p>
+			{else}
+				<a href="{$connect_url}" class="btn btn-primary">{l s='Connect' mod='powerise'}</a>
+			{/if}
 		</div>
 	</div>
 </div>
