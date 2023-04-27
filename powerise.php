@@ -83,9 +83,7 @@ class Powerise extends Module
             $this->postProcess();
         }
 
-        $redirectUrl = $this->context->link->getModuleLink('powerise', 'gateway', [
-            'q' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
-        ]);
+        $redirectUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $baseUrl = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . Tools::getShopDomain(false);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -106,15 +104,8 @@ class Powerise extends Module
         $this->context->smarty->assign('auth_user_firstname', \Configuration::get('POWERISE_AUTH_FIRSTNAME'));
         $this->context->smarty->assign('auth_user_lastname', \Configuration::get('POWERISE_AUTH_LASTNAME'));
         $this->context->smarty->assign('module_dir', $this->_path);
-        $this->context->smarty->assign('connect_url', sprintf(
-            '%s/connect?payload=%s',
-            'http://localhost:3000',
-            base64_encode(json_encode([
-                'redirect_url' => $redirectUrl,
-                'shop_url' => $baseUrl,
-                'engine' => 'PrestaShop',
-            ]))
-        ));
+        $this->context->smarty->assign('redirect_url', $redirectUrl);
+        $this->context->smarty->assign('shop_url', $baseUrl);
 
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 

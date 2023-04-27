@@ -32,10 +32,46 @@
 		<div class="col-md-6 text-right">
 			{if $auth_user_email}
 				<p><strong>{l s='You are connected as' mod='powerise'}</strong> {$auth_user_firstname} {$auth_user_lastname} ({$auth_user_email})</p>
-				<p><a href="{$connect_url}">{l s='Do you want to change account?' mod='powerise'}</a></p>
+				<p><a href="#" id="powerise_connect">{l s='Do you want to change account?' mod='powerise'}</a></p>
 			{else}
-				<a href="{$connect_url}" class="btn btn-primary">{l s='Connect' mod='powerise'}</a>
+				<a href="#"  id="powerise_connect" class="btn btn-primary">{l s='Connect' mod='powerise'}</a>
 			{/if}
 		</div>
 	</div>
 </div>
+<script src="//powerise.io/statics/powerisejs/@latest/index.js?t=1682577896"></script>
+<script>
+	$btn = document.getElementById('powerise_connect')
+	$btn.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		// Powerise.Environment.setDebugMode(true);
+		Powerise.connect({
+			shopUrl: '{$shop_url}',
+			ref: '{$redirect_url}',
+			platform: 'PrestaShop'
+		}).then((payload) => {
+			const formBody = [];
+
+			Object.keys(payload).forEach((item) => {
+				const key = encodeURIComponent(item);
+				const value = encodeURIComponent(payload[item]);
+				formBody.push(key+"="+value);
+			});
+
+			fetch(window.location.href, {
+				method: 'POST',
+				body: formBody.join("&"),
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			})
+			.then(response => response.text())
+			.then(data => {
+				window.location.reload();
+			})
+			.catch(error => console.error(error));
+			console.log(payload);
+		});
+	});
+</script>
