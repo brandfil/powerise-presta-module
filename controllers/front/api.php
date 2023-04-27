@@ -12,7 +12,7 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        $apiKey = !empty($_SERVER['HTTP-X-API-KEY']) ? $_SERVER['HTTP-X-API-KEY'] : null;
+        $apiKey = !empty($_SERVER['HTTP_X_API_KEY']) ? $_SERVER['HTTP_X_API_KEY'] : null;
         if ($apiKey !== Configuration::get('POWERISE_API_KEY')) {
             http_response_code(401);
             return die(json_encode(['error' => 'Invalid API key.']));
