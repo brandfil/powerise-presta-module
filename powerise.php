@@ -28,6 +28,20 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+function isSecure() {
+    if (isset($_SERVER['HTTP_CF_VISITOR'])) {
+        $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
+        if ($cfVisitor->scheme === 'https') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+}
+
+
 class Powerise extends Module
 {
     protected $config_form = false;
@@ -83,8 +97,8 @@ class Powerise extends Module
             $this->postProcess();
         }
 
-        $redirectUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $baseUrl = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . Tools::getShopDomain(false);
+        $redirectUrl = (isSecure() ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $baseUrl = (isSecure() ? 'https://' : 'http://') . Tools::getShopDomain(false);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($_POST['userId']) && !empty($_POST['apiKey'])) {
