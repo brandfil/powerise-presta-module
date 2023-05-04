@@ -23,7 +23,6 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -39,10 +38,6 @@ class Powerise extends Module
         $this->version = '1.0.0';
         $this->author = 'Powerise';
         $this->need_instance = 0;
-
-        /**
-         * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
-         */
         $this->bootstrap = true;
 
         parent::__construct();
@@ -50,7 +45,7 @@ class Powerise extends Module
         $this->displayName = $this->l('Powerise');
         $this->description = $this->l('Powerise integration module. Get the power of AI!');
 
-        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
     }
 
     /**
@@ -59,14 +54,14 @@ class Powerise extends Module
      */
     public function install()
     {
-        include(__DIR__ .'/sql/install.php');
+        include __DIR__ . '/sql/install.php';
 
         return parent::install() && $this->registerHook('displayBackOfficeHeader');
     }
 
     public function uninstall()
     {
-        include(__DIR__ .'/sql/uninstall.php');
+        include __DIR__ . '/sql/uninstall.php';
 
         return parent::uninstall();
     }
@@ -76,10 +71,7 @@ class Powerise extends Module
      */
     public function getContent()
     {
-        /**
-         * If values have been submitted in the form, process.
-         */
-        if (((bool)Tools::isSubmit('submitPoweriseModule')) == true) {
+        if (((bool) Tools::isSubmit('submitPoweriseModule')) == true) {
             $this->postProcess();
         }
 
@@ -90,10 +82,10 @@ class Powerise extends Module
             if (!empty(\Tools::getValue('userId')) && !empty(\Tools::getValue('apiKey'))) {
                 \Configuration::updateValue('POWERISE_USER_ID', \Tools::getValue('userId'));
                 \Configuration::updateValue('POWERISE_API_KEY', \Tools::getValue('apiKey'));
-                if(!empty(\Tools::getValue('firstName'))) {
+                if (!empty(\Tools::getValue('firstName'))) {
                     \Configuration::updateValue('POWERISE_AUTH_FIRSTNAME', \Tools::getValue('firstName'));
                 }
-                if(!empty(\Tools::getValue('lastName'))) {
+                if (!empty(\Tools::getValue('lastName'))) {
                     \Configuration::updateValue('POWERISE_AUTH_LASTNAME', \Tools::getValue('lastName'));
                 }
                 \Configuration::updateValue('POWERISE_AUTH_EMAIL', \Tools::getValue('email'));
@@ -107,7 +99,7 @@ class Powerise extends Module
         $this->context->smarty->assign('redirect_url', $redirectUrl);
         $this->context->smarty->assign('shop_url', $baseUrl);
 
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
+        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
         if ($disabled = empty(\Configuration::get('POWERISE_API_KEY'))) {
             return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
@@ -132,16 +124,16 @@ class Powerise extends Module
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitPoweriseModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
-        );
+        ];
 
-        return $helper->generateForm(array($this->getConfigForm()));
+        return $helper->generateForm([$this->getConfigForm()]);
     }
 
     /**
@@ -149,27 +141,27 @@ class Powerise extends Module
      */
     protected function getConfigForm()
     {
-        return array(
-            'form' => array(
-                'legend' => array(
+        return [
+            'form' => [
+                'legend' => [
                 'title' => $this->l('Settings'),
                 'icon' => 'icon-cogs',
-                ),
-                'input' => array(
-                    array(
+                ],
+                'input' => [
+                    [
                         'col' => 3,
                         'prefix' => '<i class="icon-key"></i>',
                         'type' => 'text',
                         'name' => 'POWERISE_API_KEY',
                         'label' => $this->l('API Key'),
                         'desc' => $this->l('API Key will be fetched automatically when you will connect your shop with Powerise.'),
-                    ),
-                ),
-                'submit' => array(
+                    ],
+                ],
+                'submit' => [
                     'title' => $this->l('Save'),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -177,9 +169,9 @@ class Powerise extends Module
      */
     protected function getConfigFormValues()
     {
-        return array(
+        return [
             'POWERISE_API_KEY' => Configuration::get('POWERISE_API_KEY'),
-        );
+        ];
     }
 
     /**
@@ -195,17 +187,18 @@ class Powerise extends Module
     }
 
     /**
-    * Add the CSS & JavaScript files you want to be loaded in the BO.
-    */
+     * Add the CSS & JavaScript files you want to be loaded in the BO.
+     */
     public function hookDisplayBackOfficeHeader()
     {
         if (Tools::getValue('configure') == $this->name) {
-            $this->context->controller->addJS($this->_path.'views/js/back.js');
-            $this->context->controller->addCSS($this->_path.'views/css/back.css');
+            $this->context->controller->addJS($this->_path . 'views/js/back.js');
+            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
         }
     }
 
-    private function isSecure() {
+    private function isSecure()
+    {
         if (isset($_SERVER['HTTP_CF_VISITOR'])) {
             $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
             if ($cfVisitor->scheme === 'https') {

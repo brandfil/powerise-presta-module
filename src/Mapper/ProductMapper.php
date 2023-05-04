@@ -19,6 +19,7 @@ class ProductMapper
     public function map($product)
     {
         $image = \Image::getCover($product['id_product']);
+
         return [
             'id' => $product['id_product'],
             'name' => $product['name'],

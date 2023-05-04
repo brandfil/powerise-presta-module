@@ -15,17 +15,19 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
         $apiKey = !empty($_SERVER['HTTP_X_API_KEY']) ? $_SERVER['HTTP_X_API_KEY'] : null;
         if ($apiKey !== Configuration::get('POWERISE_API_KEY')) {
             http_response_code(401);
-            return die(json_encode(['error' => 'Invalid API key.']));
+
+            return exit(json_encode(['error' => 'Invalid API key.']));
         }
 
         $page = Tools::getValue('page');
         $action = Tools::getValue('action');
 
         header('Content-Type: application/json');
-        switch($action) {
+        switch ($action) {
             case self::ACTION_PRODUCTS:
                 http_response_code(200);
-                return die(json_encode($this->getProducts($page)));
+
+                return exit(json_encode($this->getProducts($page)));
             case self::ACTION_PRODUCT_UPDATE:
                 $json = \Tools::file_get_contents('php://input');
                 $data = json_decode($json, true);
@@ -33,10 +35,12 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
                 $product->description = $data['description'];
                 $product->save();
                 http_response_code(200);
-                return die(json_encode($product)); // TODO: MAP PRODUCT
+
+                return exit(json_encode($product)); // TODO: MAP PRODUCT
             default:
                 http_response_code(400);
-                return die(json_encode(['error' => 'Invalid action.']));
+
+                return exit(json_encode(['error' => 'Invalid action.']));
         }
     }
 
