@@ -46,6 +46,7 @@ class Powerise extends Module
         $this->description = $this->l('Powerise integration module. Get the power of AI!');
 
         $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
+        $this->module_key = '3eb2d2d5ae451228223dbabe64825971';
     }
 
     /**
