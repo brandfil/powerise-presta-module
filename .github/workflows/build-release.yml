@@ -32,7 +32,7 @@ jobs:
 
       - name: Build zip
         run: |
-          zip -r ${{ github.event.repository.name }}.zip ../${{ github.event.repository.name }} -x '**/.*' '**/.*/**' '**views/_dev' '**docker-compose.yml' '**Dockerfile' '**composer.lock'
+          zip -r ${{ github.event.repository.name }}.zip ../${{ github.event.repository.name }} -x '**/.*' '**/.*/**' '**views/_dev**' '**docker-compose.yml' '**Dockerfile' '**composer.lock'
 
       - id: release_info
         uses: toolmantim/release-drafter@v5
