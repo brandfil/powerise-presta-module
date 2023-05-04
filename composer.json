@@ -25,5 +25,8 @@
     "preferred-install": "dist",
     "prepend-autoloader": false,
     "discard-changes": true
+  },
+  "require-dev": {
+    "prestashop/php-dev-tools": "^3.16"
   }
 }
