@@ -27,7 +27,7 @@ class PoweriseApiModuleFrontController extends ModuleFrontController
                 http_response_code(200);
                 return die(json_encode($this->getProducts($page)));
             case self::ACTION_PRODUCT_UPDATE:
-                $json = file_get_contents('php://input');
+                $json = \Tools::file_get_contents('php://input');
                 $data = json_decode($json, true);
                 $product = new \Product($data['id']);
                 $product->description = $data['description'];

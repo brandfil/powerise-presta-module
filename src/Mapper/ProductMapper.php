@@ -24,7 +24,11 @@ class ProductMapper
             'name' => $product['name'],
             'sku' => $product['reference'],
             'url' => $this->context->link->getProductLink($product['id_product']),
-            'image' => $this->context->link->getImageLink($product['link_rewrite'], $image['id_image'], 'home_default'),
+            'image' => $this->context->link->getImageLink(
+                $product['link_rewrite'],
+                $image['id_image'],
+                \ImageType::getFormattedName('home')
+            ),
             'description' => $product['description'],
             'price' => $product['price'],
         ];

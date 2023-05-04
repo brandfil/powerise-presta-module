@@ -28,20 +28,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-function isSecure() {
-    if (isset($_SERVER['HTTP_CF_VISITOR'])) {
-        $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
-        if ($cfVisitor->scheme === 'https') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
-}
-
-
 class Powerise extends Module
 {
     protected $config_form = false;
@@ -98,19 +84,19 @@ class Powerise extends Module
         }
 
         $redirectUrl = (isSecure() ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $baseUrl = (isSecure() ? 'https://' : 'http://') . Tools::getShopDomain(false);
+        $baseUrl = (isSecure() ? 'https://' : 'http://') . \Tools::getShopDomain(false);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!empty($_POST['userId']) && !empty($_POST['apiKey'])) {
-                \Configuration::updateValue('POWERISE_USER_ID', $_POST['userId']);
-                \Configuration::updateValue('POWERISE_API_KEY', $_POST['apiKey']);
-                if(!empty($_POST['firstName'])) {
-                    \Configuration::updateValue('POWERISE_AUTH_FIRSTNAME', $_POST['firstName']);
+            if (!empty(\Tools::getValue('userId')) && !empty(\Tools::getValue('apiKey'))) {
+                \Configuration::updateValue('POWERISE_USER_ID', \Tools::getValue('userId'));
+                \Configuration::updateValue('POWERISE_API_KEY', \Tools::getValue('apiKey'));
+                if(!empty(\Tools::getValue('firstName'))) {
+                    \Configuration::updateValue('POWERISE_AUTH_FIRSTNAME', \Tools::getValue('firstName'));
                 }
-                if(!empty($_POST['lastName'])) {
-                    \Configuration::updateValue('POWERISE_AUTH_LASTNAME', $_POST['lastName']);
+                if(!empty(\Tools::getValue('lastName'))) {
+                    \Configuration::updateValue('POWERISE_AUTH_LASTNAME', \Tools::getValue('lastName'));
                 }
-                \Configuration::updateValue('POWERISE_AUTH_EMAIL', $_POST['email']);
+                \Configuration::updateValue('POWERISE_AUTH_EMAIL', \Tools::getValue('email'));
             }
         }
 
@@ -217,5 +203,18 @@ class Powerise extends Module
             $this->context->controller->addJS($this->_path.'views/js/back.js');
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }
+    }
+
+    private function isSecure() {
+        if (isset($_SERVER['HTTP_CF_VISITOR'])) {
+            $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
+            if ($cfVisitor->scheme === 'https') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
     }
 }
