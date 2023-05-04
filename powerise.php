@@ -75,8 +75,8 @@ class Powerise extends Module
             $this->postProcess();
         }
 
-        $redirectUrl = (isSecure() ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $baseUrl = (isSecure() ? 'https://' : 'http://') . \Tools::getShopDomain(false);
+        $redirectUrl = ($this->isSecure() ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $baseUrl = ($this->isSecure() ? 'https://' : 'http://') . \Tools::getShopDomain(false);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty(\Tools::getValue('userId')) && !empty(\Tools::getValue('apiKey'))) {
