@@ -99,14 +99,10 @@ class Powerise extends Module
         $this->context->smarty->assign('module_dir', $this->_path);
         $this->context->smarty->assign('redirect_url', $redirectUrl);
         $this->context->smarty->assign('shop_url', $baseUrl);
+        $this->context->smarty->assign('configuration_form', $this->renderForm());
+        $this->context->smarty->assign('configuration_disabled', empty(\Configuration::get('POWERISE_API_KEY')));
 
-        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
-
-        if ($disabled = empty(\Configuration::get('POWERISE_API_KEY'))) {
-            return $output . '<div class="pw-section pw-section--disabled">' . $this->renderForm() . '<div class="pw-section__overlay">Connect your account first</div></div>';
-        }
-
-        return $output . $this->renderForm();
+        return $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
     }
 
     /**
@@ -180,10 +176,24 @@ class Powerise extends Module
      */
     protected function postProcess()
     {
-        $form_values = $this->getConfigFormValues();
+        try{
+            $form_values = $this->getConfigFormValues();
 
-        foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
+            foreach (array_keys($form_values) as $key) {
+                Configuration::updateValue($key, Tools::getValue($key));
+            }
+        } catch (\Exception $e) {
+            $this->context->controller->errors[] = $this->trans(
+                'An error occurred while saving configuration. Details: %s',
+                [$e->getMessage()],
+                'Modules.Ncmodernsignin.Admin'
+            );
+        }
+
+        if (!count($this->context->controller->errors)) {
+            $this->context->controller->confirmations[] = $this->l(
+                'Your configuration has been successfully saved.'
+            );
         }
     }
 

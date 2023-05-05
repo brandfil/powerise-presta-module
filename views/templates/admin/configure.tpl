@@ -31,6 +31,8 @@
 		</div>
 		<div class="col-md-6 text-right">
 			{if $auth_user_email}
+				<a href="https://app.powerise.io" class="btn btn-primary">{l s='Proceed to configuration' mod='powerise'}</a>
+				<hr>
 				<p><strong>{l s='You are connected as' mod='powerise'}</strong> {$auth_user_firstname} {$auth_user_lastname} ({$auth_user_email})</p>
 				<p><a href="#" id="powerise_connect">{l s='Do you want to change account?' mod='powerise'}</a></p>
 			{else}
@@ -39,6 +41,16 @@
 		</div>
 	</div>
 </div>
+
+{if $configuration_disabled}
+	<div class="pw-section pw-section--disabled">
+		{$configuration_form}
+		<div class="pw-section__overlay">Connect your account first</div>
+	</div>
+{else}
+	{$configuration_form}
+{/if}
+
 <script src="//powerise.io/statics/powerisejs/@latest/index.js?t=1682577896"></script>
 <script>
 	$btn = document.getElementById('powerise_connect')
