@@ -176,7 +176,7 @@ class Powerise extends Module
      */
     protected function postProcess()
     {
-        try{
+        try {
             $form_values = $this->getConfigFormValues();
 
             foreach (array_keys($form_values) as $key) {
